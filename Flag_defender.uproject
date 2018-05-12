@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{6196A7E9-4405-47ED-5C26-AE9E7A887A59}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Flag_defender",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
