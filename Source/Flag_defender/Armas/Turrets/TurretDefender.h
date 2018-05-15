@@ -19,6 +19,25 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* Mesh_Turret_Tripod_Inferior;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* Mesh_Turret_Tripod_Superior;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* Mesh_Turret_Gun_default;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* Mesh_Turret_UnderPlate_default;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* Mesh_Turret_Chrgmtr_default;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UStaticMeshComponent* Mesh_Turret_Bolts_default;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
