@@ -31,6 +31,10 @@ public:
 
 protected:
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UAIPerceptionStimuliSourceComponent* AIPerceptionStimuliSourceComponent;
+
+
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();
 

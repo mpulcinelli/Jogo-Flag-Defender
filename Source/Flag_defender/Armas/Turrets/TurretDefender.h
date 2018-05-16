@@ -37,6 +37,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* Mesh_Turret_Bolts_default;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UAISenseConfig_Sight* SenseConfig;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UAIPerceptionComponent* PerceptionComponent;
+
+	UFUNCTION()
+	void OnPerceptionUpdate(const TArray<AActor*>& UpdatedActors);
+
 
 public:	
 	// Called every frame

@@ -2,6 +2,8 @@
 
 #include "TurretDefender.h"
 #include <Components/StaticMeshComponent.h>
+#include <Perception/AIPerceptionComponent.h>
+#include <Perception/AISenseConfig_Sight.h>
 
 
 // Sets default values
@@ -37,6 +39,15 @@ ATurretDefender::ATurretDefender()
 	Mesh_Turret_UnderPlate_default->SetupAttachment(Mesh_Turret_Gun_default);
 	Mesh_Turret_Chrgmtr_default->SetupAttachment(Mesh_Turret_Gun_default);
 	
+	SenseConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SenseConfig"));
+	SenseConfig->DetectionByAffiliation.bDetectEnemies = true;
+	SenseConfig->DetectionByAffiliation.bDetectFriendlies = true;
+	SenseConfig->DetectionByAffiliation.bDetectNeutrals = true;
+
+	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
+
+	PerceptionComponent->ConfigureSense(*SenseConfig);
+	PerceptionComponent->SetDominantSense(SenseConfig->GetSenseImplementation());
 
 }
 
@@ -45,6 +56,12 @@ void ATurretDefender::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &ATurretDefender::OnPerceptionUpdate);
+}
+
+void ATurretDefender::OnPerceptionUpdate(const TArray<AActor*>& UpdatedActors)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("OnPerceptionUpdate"));
 }
 
 // Called every frame
