@@ -46,6 +46,11 @@ protected:
 	UFUNCTION()
 	void OnPerceptionUpdate(const TArray<AActor*>& UpdatedActors);
 
+	class AFlag_defenderCharacter* TargerActor;
+
+	FRotator RotacaoInicialTurret;
+
+	void UpdateTurretPosition();
 
 public:	
 	// Called every frame

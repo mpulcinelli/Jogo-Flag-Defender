@@ -4,6 +4,8 @@
 #include <Components/StaticMeshComponent.h>
 #include <Perception/AIPerceptionComponent.h>
 #include <Perception/AISenseConfig_Sight.h>
+#include "Flag_defenderCharacter.h"
+#include <Kismet/KismetMathLibrary.h>
 
 
 // Sets default values
@@ -56,12 +58,61 @@ void ATurretDefender::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	RotacaoInicialTurret = GetActorRotation();
+
 	PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &ATurretDefender::OnPerceptionUpdate);
 }
 
 void ATurretDefender::OnPerceptionUpdate(const TArray<AActor*>& UpdatedActors)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("OnPerceptionUpdate"));
+
+	TArray<AActor*> UpdActors;
+	PerceptionComponent->GetCurrentlyPerceivedActors(nullptr, UpdActors);
+
+	if (UpdActors.Num() > 0) {
+		
+		for (int i=0;i<UpdActors.Num();i++)
+		{
+			TargerActor = Cast<AFlag_defenderCharacter>(UpdActors[i]);
+
+			if (TargerActor != nullptr) {
+				UpdateTurretPosition();
+				break;
+			}
+			else
+			{
+				TargerActor = nullptr;
+				Mesh_Turret_Tripod_Superior->SetRelativeRotation(RotacaoInicialTurret);
+			}
+		}
+	}
+	else
+	{
+		TargerActor = nullptr;
+		Mesh_Turret_Tripod_Superior->SetRelativeRotation(RotacaoInicialTurret);
+	}
+}
+
+
+void ATurretDefender::UpdateTurretPosition()
+{
+	if (TargerActor == nullptr) return;
+
+	FVector StartLocation = GetActorLocation();
+	FVector EndLocation = TargerActor->GetActorLocation();
+
+	FRotator MyActRotation = UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation);
+
+	FRotator MyArmActRotation = FRotator(0, 0, 0);
+
+	MyArmActRotation.Pitch = MyActRotation.Pitch;
+
+	Mesh_Turret_Gun_default->SetRelativeRotation(MyArmActRotation);
+
+	MyActRotation.Pitch = RotacaoInicialTurret.Pitch;
+
+	Mesh_Turret_Tripod_Superior->SetRelativeRotation(MyActRotation);
 }
 
 // Called every frame
@@ -69,6 +120,7 @@ void ATurretDefender::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UpdateTurretPosition();
 }
 
 // Called to bind functionality to input
