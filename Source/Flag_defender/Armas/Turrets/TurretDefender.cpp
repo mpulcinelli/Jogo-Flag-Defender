@@ -100,6 +100,7 @@ void ATurretDefender::UpdateTurretPosition()
 	if (TargerActor == nullptr) return;
 
 	FVector StartLocation = GetActorLocation();
+
 	FVector EndLocation = TargerActor->GetActorLocation();
 
 	FRotator MyActRotation = UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation);
@@ -113,6 +114,7 @@ void ATurretDefender::UpdateTurretPosition()
 	MyActRotation.Pitch = RotacaoInicialTurret.Pitch;
 
 	Mesh_Turret_Tripod_Superior->SetRelativeRotation(MyActRotation);
+	
 }
 
 // Called every frame
