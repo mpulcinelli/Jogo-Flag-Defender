@@ -46,6 +46,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class TSubclassOf<class AProjetil> ProjetilParaTurret;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UParticleSystem* ParticleSystem;
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UArrowComponent* PositionToSpawn;
 

@@ -11,6 +11,7 @@
 #include "Engine/World.h"
 #include "UObjectGlobals.h"
 #include "../Projeteis/Projetil.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -165,6 +166,12 @@ void ATurretDefender::Firing()
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		GetWorld()->SpawnActor<AProjetil>(ProjetilParaTurret, SpawnPosition, SpawnRotation, SpawnParams);
+		
+		if (ParticleSystem != nullptr)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleSystem, SpawnPosition, SpawnRotation, FVector(2,2,2));
+		}
+
 		UE_LOG(LogTemp, Warning, TEXT("Firing..."));
 	}
 }

@@ -5,6 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include <GameFramework/ProjectileMovementComponent.h>
+#include "Flag_defenderCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -15,6 +17,9 @@ AProjetil::AProjetil()
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	if (!ensure(SphereComponent != nullptr))return;
+	
+	SphereComponent->SetNotifyRigidBodyCollision(true);
+	//SphereComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 
 	RootComponent = SphereComponent;
 
@@ -45,7 +50,7 @@ void AProjetil::BeginPlay()
 	Super::BeginPlay();
 	
 	if (SphereComponent != nullptr) {
-		SphereComponent->SetNotifyRigidBodyCollision(true);
+		
 		SphereComponent->OnComponentHit.AddDynamic(this, &AProjetil::OnSphereColisionHit);
 	}
 
@@ -53,8 +58,16 @@ void AProjetil::BeginPlay()
 
 void AProjetil::OnSphereColisionHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	AFlag_defenderCharacter* MyChar = Cast<AFlag_defenderCharacter>(OtherActor);
+
+	if (MyChar != nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("Acertou o player"));
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleSystem, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+		Destroy();
+	}
+
 	UE_LOG(LogTemp, Warning, TEXT("OnSphereColisionHit"));
-	Destroy();
+	
 }
 
 

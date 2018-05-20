@@ -28,6 +28,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UParticleSystemComponent* ParticleSystemComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UParticleSystem* ParticleSystem;
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
