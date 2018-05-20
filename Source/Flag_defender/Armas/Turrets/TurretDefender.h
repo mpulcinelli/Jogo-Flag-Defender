@@ -43,6 +43,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UAIPerceptionComponent* PerceptionComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class TSubclassOf<class AProjetil> ProjetilParaTurret;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	class UArrowComponent* PositionToSpawn;
+
 	UFUNCTION()
 	void OnPerceptionUpdate(const TArray<AActor*>& UpdatedActors);
 
@@ -51,6 +57,14 @@ protected:
 	FRotator RotacaoInicialTurret;
 
 	void UpdateTurretPosition();
+
+	void StartFire();
+
+	void StopFire();
+
+	void Firing();
+
+	FTimerHandle TimerHandle_TurretFire;
 
 public:	
 	// Called every frame

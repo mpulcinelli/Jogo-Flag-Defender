@@ -13,6 +13,9 @@ public class Flag_defender : ModuleRules
                                                             "Engine",
                                                             "InputCore",
                                                             "HeadMountedDisplay",
+                                                            "PhysX",
+                                                            "APEX",
+                                                            "ApexDestruction",
                                                             "AIModule"});
 	}
 }

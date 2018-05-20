@@ -6,6 +6,11 @@
 #include <Perception/AISenseConfig_Sight.h>
 #include "Flag_defenderCharacter.h"
 #include <Kismet/KismetMathLibrary.h>
+#include "TimerManager.h"
+#include "Components/ArrowComponent.h"
+#include "Engine/World.h"
+#include "UObjectGlobals.h"
+#include "../Projeteis/Projetil.h"
 
 
 // Sets default values
@@ -51,6 +56,10 @@ ATurretDefender::ATurretDefender()
 	PerceptionComponent->ConfigureSense(*SenseConfig);
 	PerceptionComponent->SetDominantSense(SenseConfig->GetSenseImplementation());
 
+
+	PositionToSpawn = CreateDefaultSubobject<UArrowComponent>(TEXT("PositionToSpawn"));
+	PositionToSpawn->SetupAttachment(Mesh_Turret_Gun_default);
+
 }
 
 // Called when the game starts or when spawned
@@ -77,20 +86,38 @@ void ATurretDefender::OnPerceptionUpdate(const TArray<AActor*>& UpdatedActors)
 			TargerActor = Cast<AFlag_defenderCharacter>(UpdActors[i]);
 
 			if (TargerActor != nullptr) {
+				
 				UpdateTurretPosition();
+				StartFire();
 				break;
 			}
 			else
 			{
+				StopFire();
+				FRotator CurPosition = Mesh_Turret_Tripod_Superior->GetComponentRotation();
 				TargerActor = nullptr;
-				Mesh_Turret_Tripod_Superior->SetRelativeRotation(RotacaoInicialTurret);
+					
+				CurPosition = Mesh_Turret_Tripod_Superior->GetComponentRotation();
+				FRotator Rotating = FMath::RInterpTo(CurPosition, RotacaoInicialTurret, GetWorld()->GetDeltaSeconds(), 100);
+
+				Mesh_Turret_Tripod_Superior->SetRelativeRotation(Rotating);
+				UE_LOG(LogTemp, Warning, TEXT("while (CurPosition != RotacaoInicialTurret) "));
 			}
 		}
 	}
 	else
 	{
+		StopFire();
+		FRotator CurPosition = Mesh_Turret_Tripod_Superior->GetComponentRotation();
 		TargerActor = nullptr;
-		Mesh_Turret_Tripod_Superior->SetRelativeRotation(RotacaoInicialTurret);
+
+		CurPosition = Mesh_Turret_Tripod_Superior->GetComponentRotation();
+		FRotator Rotating = FMath::RInterpTo(CurPosition, RotacaoInicialTurret, GetWorld()->GetDeltaSeconds(), 100);
+
+		Mesh_Turret_Tripod_Superior->SetRelativeRotation(Rotating);
+
+		UE_LOG(LogTemp, Warning, TEXT("while (CurPosition != RotacaoInicialTurret) "));
+		
 	}
 }
 
@@ -115,6 +142,31 @@ void ATurretDefender::UpdateTurretPosition()
 
 	Mesh_Turret_Tripod_Superior->SetRelativeRotation(MyActRotation);
 	
+}
+
+void ATurretDefender::StartFire()
+{
+	GetWorldTimerManager().SetTimer(TimerHandle_TurretFire, this, &ATurretDefender::Firing, 0.5f, true, 1.0f);
+
+}
+
+void ATurretDefender::StopFire()
+{
+	GetWorldTimerManager().ClearTimer(TimerHandle_TurretFire);
+}
+
+void ATurretDefender::Firing()
+{
+	AProjetil* CurrentProjetil = ProjetilParaTurret.GetDefaultObject();
+
+	if (CurrentProjetil != nullptr) {
+		FVector SpawnPosition = PositionToSpawn->GetComponentLocation();
+		FRotator SpawnRotation = PositionToSpawn->GetComponentRotation();
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		GetWorld()->SpawnActor<AProjetil>(ProjetilParaTurret, SpawnPosition, SpawnRotation, SpawnParams);
+		UE_LOG(LogTemp, Warning, TEXT("Firing..."));
+	}
 }
 
 // Called every frame
