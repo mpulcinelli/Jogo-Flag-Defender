@@ -63,6 +63,9 @@ void AProjetil::OnSphereColisionHit(UPrimitiveComponent* HitComponent, AActor* O
 	if (MyChar != nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("Acertou o player"));
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleSystem, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+		
+		UGameplayStatics::ApplyDamage(OtherActor, 5.0f, this->GetInstigatorController(), this, DamageType);
+		
 		Destroy();
 	}
 

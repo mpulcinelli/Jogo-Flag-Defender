@@ -31,6 +31,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UParticleSystem* ParticleSystem;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UDamageType> DamageType;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UProjectileMovementComponent* ProjectileMovementComponent;
