@@ -14,6 +14,3 @@ class AFlag_defenderGameMode : public AGameModeBase
 public:
 	AFlag_defenderGameMode();
 };
-
-
-
